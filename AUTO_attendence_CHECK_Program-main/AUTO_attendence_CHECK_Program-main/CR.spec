@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(['CR.py'],
-             pathex=['C:\\Workspace\\CAKD3\\CAKD3-Github\\-Projects\\Lazy_project\\AUTO_attendence_CHECK_Program'],
+             pathex=['C:\\Workspace\\cakd3\\AUTO_attendence_CHECK_Program-main\\AUTO_attendence_CHECK_Program-main'],
              binaries=[],
              datas=[],
              hiddenimports=[],

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[9]:
 
 
 import schedule
@@ -169,8 +169,32 @@ while True:
     time.sleep(1)
 
 
-# In[10]:
+# In[ ]:
 
 
-get_ipython().system('pip install tkinter')
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
 
