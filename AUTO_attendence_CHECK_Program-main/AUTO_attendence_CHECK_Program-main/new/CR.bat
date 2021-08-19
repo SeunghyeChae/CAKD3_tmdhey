@@ -1,0 +1,1 @@
+"C:\tool\python.exe" "C:\Workspace\CAKD3-Github\-Projects\Lazy_project\AUTO_attendence_CHECK_Program\new\CR.py"
