@@ -8,3 +8,6 @@ db/dataset/멤버십여부.txt
 db/dataset/상품분류.txt
 db/dataset/채널이용.txt
 AUTO_attendence_CHECK_Program/
+머신러닝/dataset/house_df.pkl
+머신러닝/dataset/tdf1.pkl
+머신러닝/dataset/creditcard.csv
