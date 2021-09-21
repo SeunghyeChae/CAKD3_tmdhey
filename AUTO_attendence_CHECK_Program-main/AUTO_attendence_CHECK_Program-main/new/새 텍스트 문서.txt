@@ -1,7 +1,0 @@
-"파이썬 경로(파이썬 설치되어 있는 곳 .exe" "실행할 파이썬 스크립트 py"
-
-Set WinScriptHost = CreateObject( "Wscript.shell" )
-WinScriptHost.Run Chr(34) & "실행할 배치파일경로\파일명.bat" & Chr(34), 0
-Set WinScriptHost = Nothing
-
-.vbs

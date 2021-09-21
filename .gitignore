@@ -1,20 +1,61 @@
 
-미니 팀플/dataset/새 폴더 (2)/2020년 서울시 차량속도보고서.pdf
-db/dataset/titanic3.csv
-db/dataset/경쟁사이용.txt
-db/dataset/고객DEMO.txt
-db/dataset/구매상품TR.txt
-db/dataset/멤버십여부.txt
-db/dataset/상품분류.txt
-db/dataset/채널이용.txt
-AUTO_attendence_CHECK_Program/
-머신러닝/dataset/house_df.pkl
-머신러닝/dataset/tdf1.pkl
-머신러닝/dataset/creditcard.csv
-머신러닝_스터디/datasets/housing/housing.tgz
-미니 팀플2/dataset/RDD2020_data.tar.gz
-1차 플젝/.ipynb_checkpoints/데이터확인-checkpoint.ipynb
-1차 플젝/.ipynb_checkpoints/데이터확인-checkpoint.ipynb
-1차 플젝/.ipynb_checkpoints/데이터확인-checkpoint.ipynb
-1차 플젝/dataset/PURPRD/Copy of PURPRD_2014_A_DATA_TABLE.csv
-1차 플젝/.ipynb_checkpoints/데이터확인-checkpoint.ipynb
+000. 1차 플젝/dataset/prodcat_final.pkl
+000. 1차 플젝/dataset/PURPRD/Copy of PURPRD_2014_A_DATA_TABLE.csv
+000. 1차 플젝/dataset/PURPRD/Copy of PURPRD_2014_B_DATA_TABLE.csv
+000. 1차 플젝/dataset/PURPRD/Copy of PURPRD_2014_C_DATA_TABLE.csv
+000. 1차 플젝/dataset/PURPRD/Copy of PURPRD_2014_D_DATA_TABLE.csv
+000. 1차 플젝/dataset/PURPRD/Copy of PURPRD_2015_A_DATA_TABLE.csv
+000. 1차 플젝/dataset/PURPRD/Copy of PURPRD_2015_B_DATA_TABLE.csv
+*.csv
+000. 1차 플젝/dataset/PURPRD/구매_거주_A
+000. 1차 플젝/dataset/PURPRD/구매_거주_B
+000. 1차 플젝/dataset/PURPRD/구매_거주_C
+000. 1차 플젝/dataset/PURPRD/구매_거주_D
+000. 1차 플젝/dataset/purprd_region.pkl
+000. 1차 플젝/dataset/purprd_region.pkl
+000. 1차 플젝/dataset/purprd_s/prodcat_final.pkl
+000. 1차 플젝/dataset/purprd_s/purprd_prodcat.pkl
+000. 1차 플젝/dataset/purprd_s/대분류수정기준표.pkl
+000. 1차 플젝/dataset/purprd_제휴사/purprd_B.pkl
+000. 1차 플젝/dataset/purprd_제휴사/purprd_A.pkl
+000. 1차 플젝/dataset/purprd_제휴사/purprd_C.pkl
+000. 1차 플젝/dataset/purprd_제휴사/purprd_D.pkl
+000. 1차 플젝/dataset/txt/경쟁사이용.txt
+000. 1차 플젝/dataset/txt/고객DEMO.txt
+000. 1차 플젝/dataset/구매상품TR.txt
+000. 1차 플젝/dataset/대분류수정기준표.pkl
+000. 1차 플젝/dataset/대분류코드_rate.pkl
+000. 1차 플젝/dataset/상품분류.txt
+000. 1차 플젝/dataset/멤버십여부.txt
+000. 1차 플젝/dataset/연도별전체매출액.pkl
+000. 1차 플젝/dataset/제휴사별_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate/A_대분류코드_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate/A_전체_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate/A_중분류명_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate/B_대분류코드_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate/B_전체_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate/B_중분류명_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate/C_대분류코드_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate/C_전체_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate/C_중분류명_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate/D_대분류코드_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate/D_전체_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate/D_중분류명_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate/전체구매.pkl
+000. 1차 플젝/dataset/제휴사별_rate_1-24/A_대분류코드_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate_1-24/A_전체_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate_1-24/A_중분류명_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate_1-24/B_대분류코드_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate_1-24/B_전체_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate_1-24/B_중분류명_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate_1-24/C_대분류코드_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate_1-24/C_전체_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate_1-24/C_중분류명_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate_1-24/D_대분류코드_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate_1-24/D_전체_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate_1-24/D_중분류명_rate.pkl
+000. 1차 플젝/dataset/제휴사별_rate_1-24/전체구매.pkl
+000. 1차 플젝/dataset/채널이용.txt
+08. database/dataset/경쟁사이용.txt
+08. database/dataset/고객DEMO.txt
+*.txt
