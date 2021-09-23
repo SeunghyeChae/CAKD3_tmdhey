@@ -59,3 +59,6 @@
 08. database/dataset/경쟁사이용.txt
 08. database/dataset/고객DEMO.txt
 *.txt
+000. 1차 플젝/dataset/purprd_cust.pkl
+000. 1차 플젝/dataset/purprd_대분류명11.pkl
+000. 1차 플젝/dataset/purprd_대분류명11_.pkl
