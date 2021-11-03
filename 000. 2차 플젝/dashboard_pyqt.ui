@@ -6,12 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1066</width>
-    <height>777</height>
+    <width>1054</width>
+    <height>796</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Bone Age</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>hand_bone_sh.png</normaloff>hand_bone_sh.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">background-color:rgb(31, 31, 31)</string>
@@ -54,8 +58,8 @@ QPushButton#pushButton:pressed{
   <widget class="QLabel" name="input_info">
    <property name="geometry">
     <rect>
-     <x>530</x>
-     <y>30</y>
+     <x>560</x>
+     <y>130</y>
      <width>331</width>
      <height>371</height>
     </rect>
@@ -74,8 +78,8 @@ border-top-left-radius: 30px;</string>
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>660</x>
-     <y>40</y>
+     <x>690</x>
+     <y>140</y>
      <width>61</width>
      <height>41</height>
     </rect>
@@ -97,8 +101,8 @@ color: rgb(42, 42, 42)</string>
   <widget class="QLineEdit" name="input_name">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>110</y>
+     <x>580</x>
+     <y>210</y>
      <width>280</width>
      <height>50</height>
     </rect>
@@ -123,8 +127,8 @@ padding-bottom: 7px;</string>
   <widget class="QLineEdit" name="input_age">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>180</y>
+     <x>580</x>
+     <y>280</y>
      <width>280</width>
      <height>50</height>
     </rect>
@@ -149,8 +153,8 @@ padding-bottom: 7px;</string>
   <widget class="QLineEdit" name="input_height">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>250</y>
+     <x>580</x>
+     <y>350</y>
      <width>280</width>
      <height>50</height>
     </rect>
@@ -175,8 +179,8 @@ padding-bottom: 7px;</string>
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>640</x>
-     <y>330</y>
+     <x>670</x>
+     <y>430</y>
      <width>111</width>
      <height>41</height>
     </rect>
@@ -220,11 +224,11 @@ QPushButton#pushButton:pressed{
     <string notr="true">background-color : rgb(250, 250, 250)</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="img_button_2">
+  <widget class="QPushButton" name="next_button">
    <property name="geometry">
     <rect>
-     <x>720</x>
-     <y>590</y>
+     <x>870</x>
+     <y>690</y>
      <width>141</width>
      <height>61</height>
     </rect>
