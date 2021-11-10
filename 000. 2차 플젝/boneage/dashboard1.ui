@@ -18,10 +18,16 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>:/icon/boneage_icon.png</normaloff>:/icon/boneage_icon.png</iconset>
+    <normaloff>boneage_icon.png</normaloff>boneage_icon.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">background-color:rgb(247, 242, 231);</string>
+  </property>
+  <property name="sizeGripEnabled">
+   <bool>false</bool>
+  </property>
+  <property name="modal">
+   <bool>false</bool>
   </property>
   <widget class="QLabel" name="input_info">
    <property name="geometry">
@@ -162,8 +168,8 @@ padding-bottom: 7px;</string>
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>1000</width>
-     <height>800</height>
+     <width>981</width>
+     <height>781</height>
     </rect>
    </property>
    <property name="font">
@@ -283,32 +289,6 @@ font: 11pt &quot;AcadEref&quot;; color: rgb(150, 150, 150);</string>
      <string>yyyy-MM-dd  hh:mm</string>
     </property>
    </widget>
-   <widget class="QLabel" name="loading_img">
-    <property name="geometry">
-     <rect>
-      <x>160</x>
-      <y>190</y>
-      <width>211</width>
-      <height>161</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Calibri</family>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(230, 230, 230);
-image: url(:/icon/loading_icon.gif);</string>
-    </property>
-    <property name="inputMethodHints">
-     <set>Qt::ImhHiddenText</set>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
    <widget class="QPushButton" name="img_button">
     <property name="geometry">
      <rect>
@@ -379,7 +359,7 @@ color: rgb(230, 230, 230);
      <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextEditable|Qt::TextEditorInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
     </property>
    </widget>
-   <widget class="QPushButton" name="next_button">
+   <widget class="QPushButton" name="next_button2">
     <property name="geometry">
      <rect>
       <x>800</x>
@@ -425,12 +405,77 @@ QPushButton#pushButton:pressed{
      <bool>false</bool>
     </property>
    </widget>
-   <zorder>input_img</zorder>
-   <zorder>time2</zorder>
-   <zorder>img_button</zorder>
-   <zorder>description_img</zorder>
-   <zorder>next_button</zorder>
-   <zorder>loading_img</zorder>
+   <widget class="QProgressBar" name="progressBar2">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>650</y>
+      <width>141</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="cursor">
+     <cursorShape>WaitCursor</cursorShape>
+    </property>
+    <property name="mouseTracking">
+     <bool>false</bool>
+    </property>
+    <property name="contextMenuPolicy">
+     <enum>Qt::DefaultContextMenu</enum>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="inputMethodHints">
+     <set>Qt::ImhNone</set>
+    </property>
+    <property name="value">
+     <number>0</number>
+    </property>
+    <property name="textVisible">
+     <bool>false</bool>
+    </property>
+    <property name="invertedAppearance">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="loading_img">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>270</y>
+      <width>31</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Calibri</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="inputMethodHints">
+     <set>Qt::ImhHiddenText</set>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
   </widget>
   <widget class="QPushButton" name="ok_button">
    <property name="geometry">
@@ -515,6 +560,24 @@ background-color: rgb(255, 255, 255);</string>
     </item>
    </layout>
   </widget>
+  <widget class="QLabel" name="v">
+   <property name="geometry">
+    <rect>
+     <x>810</x>
+     <y>499</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:0, stop:0 rgba(0, 0, 0, 0), stop:1 rgba(255, 255, 255, 0));
+color: rgb(255, 0, 0);
+font: 16pt &quot;Arial Rounded MT Bold&quot;;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>frame</zorder>
   <zorder>input_info</zorder>
   <zorder>label</zorder>
@@ -523,6 +586,7 @@ background-color: rgb(255, 255, 255);</string>
   <zorder>input_height</zorder>
   <zorder>ok_button</zorder>
   <zorder>horizontalFrame</zorder>
+  <zorder>v</zorder>
  </widget>
  <tabstops>
   <tabstop>input_name</tabstop>
@@ -548,7 +612,7 @@ background-color: rgb(255, 255, 255);</string>
    </hints>
   </connection>
   <connection>
-   <sender>next_button</sender>
+   <sender>next_button2</sender>
    <signal>clicked()</signal>
    <receiver>step2</receiver>
    <slot>gotonextpage()</slot>
@@ -591,7 +655,7 @@ background-color: rgb(255, 255, 255);</string>
     </hint>
     <hint type="destinationlabel">
      <x>775</x>
-     <y>799</y>
+     <y>810</y>
     </hint>
    </hints>
   </connection>
@@ -602,12 +666,12 @@ background-color: rgb(255, 255, 255);</string>
    <slot>push_ok_button()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>746</x>
-     <y>520</y>
+     <x>756</x>
+     <y>516</y>
     </hint>
     <hint type="destinationlabel">
-     <x>999</x>
-     <y>513</y>
+     <x>763</x>
+     <y>851</y>
     </hint>
    </hints>
   </connection>
@@ -618,12 +682,12 @@ background-color: rgb(255, 255, 255);</string>
    <slot>info()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>821</x>
-     <y>260</y>
+     <x>613</x>
+     <y>243</y>
     </hint>
     <hint type="destinationlabel">
-     <x>999</x>
-     <y>247</y>
+     <x>613</x>
+     <y>806</y>
     </hint>
    </hints>
   </connection>
@@ -634,12 +698,12 @@ background-color: rgb(255, 255, 255);</string>
    <slot>info()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>766</x>
-     <y>302</y>
+     <x>646</x>
+     <y>308</y>
     </hint>
     <hint type="destinationlabel">
-     <x>999</x>
-     <y>299</y>
+     <x>649</x>
+     <y>818</y>
     </hint>
    </hints>
   </connection>
@@ -650,12 +714,28 @@ background-color: rgb(255, 255, 255);</string>
    <slot>info()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>737</x>
-     <y>359</y>
+     <x>705</x>
+     <y>362</y>
     </hint>
     <hint type="destinationlabel">
-     <x>999</x>
-     <y>356</y>
+     <x>835</x>
+     <y>807</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>next_button2</sender>
+   <signal>clicked()</signal>
+   <receiver>progressBar2</receiver>
+   <slot>update()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>938</x>
+     <y>716</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>930</x>
+     <y>673</y>
     </hint>
    </hints>
   </connection>

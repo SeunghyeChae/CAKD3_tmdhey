@@ -2,10 +2,14 @@
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.linear_model import LinearRegression
 import glob
 import math
 import re
+import pandas as pd
+import warnings
+warnings.filterwarnings('ignore')
 
 #-----------------------------------------------------------------------------------
 # read_img(path) -> original_img
@@ -464,3 +468,320 @@ def bone_age_window(img, gender, predicted_bone_age ):
     # cv2.waitKey()
     return predict_result
 
+#######################################################3
+# 그래프 출력 함수
+
+# lms_df : height_df.csv
+# lms_df = pd.read_csv('/content/drive/MyDrive/2차 프로젝트 원본 데이터/growth/height_df.csv')
+
+def Height_prediction ( gender, BA, current_H, lms_df) :
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    import pandas as pd
+    
+    month_age = round(BA * 12)
+    if gender == 1:
+        lms_index = month_age - 36                                                             
+        L_18, M_18, S_18 = lms_df.iloc[191,2], lms_df.iloc[191,3], lms_df.iloc[191,4]
+    elif gender == 0:
+        lms_index = month_age - 36
+        L_18, M_18, S_18 = lms_df.iloc[383,2], lms_df.iloc[383,3], lms_df.iloc[383,4]
+
+    L,M,S = lms_df.iloc[lms_index,2], lms_df.iloc[lms_index,3],lms_df.iloc[lms_index,4]
+    x = current_H
+    
+    Z = (((x/M)**L)-1)/(L*S)
+    Z = round(Z,4)
+
+    pred_height = M_18 * (1 + (L_18 * S_18 * Z)) ** (1 / L_18)
+    pred_height = round(pred_height, 1)
+    return pred_height
+
+def find_th(df,BA,Height):
+    try:
+        df = df.reset_index()
+        find_df = df[(df['AGE'] >= BA) & (df['MONTH'] >= int(BA*12) )] >= Height
+        find_df = find_df.iloc[0]
+        result_th = find_df[find_df==True].index[0]
+        return result_th
+    except:
+        print('Abnormal growth. Please check again')
+
+# df_m = pd.read_csv('/content/drive/MyDrive/2차 프로젝트 원본 데이터/growth/male_year.csv',index_col='AGE')
+# df_fm = pd.read_csv('/content/drive/MyDrive/2차 프로젝트 원본 데이터/growth/female_year.csv',index_col='AGE')
+def Height_graph(gender, Predict_BA, current_Height, df_m, df_fm, lms_df, graph_path):
+    import pandas as pd
+    import matplotlib
+    matplotlib.use('Qt5Agg')
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    import cv2
+    from datetime import datetime
+    now = datetime.now()
+    formattedDate = now.strftime("%Y%m%d_%H%M%S")
+    
+    pngname = formattedDate +'.jpg'
+    graph_path = './graph_save/' + pngname
+    try:
+        plt.figure(figsize=(10,15))  
+        
+        box={'facecolor':'w','edgecolor':'k','boxstyle':'round','alpha':0.5}
+        
+        if gender == 1:
+            df = df_m.copy()
+            sns.lineplot(data=df[['1st','3rd','5th','10th','25th','50th','75th','90th','95th','97th','99th']],palette='PuBu',dashes=False)
+        elif gender == 0:
+            df = df_fm.copy()
+            sns.lineplot(data=df[['1st','3rd','5th','10th','25th','50th','75th','90th','95th','97th','99th']],palette='Reds',dashes=False)
+        
+        ## 위치하고 있는 분위수 판단
+        result_th = find_th(df,Predict_BA,current_Height)
+
+        ## 18세 예상 키 예측
+        Predict_Height = Height_prediction(gender,Predict_BA,current_Height, lms_df)
+
+        ## x,y 축 라벨링
+        plt.xlabel('Age')
+        plt.ylabel('Height')
+
+        # 현재 나이 (예측 골연령값) + 현재 신장
+        plt.axvline(Predict_BA,color='k',linestyle='--')
+        plt.axhline(current_Height,color='k',linestyle='--')
+
+        ## 현재위치 
+        plt.plot(Predict_BA, current_Height, marker="o", markersize=10,color="k")
+        
+        ## 분위수 오류해결
+
+        if result_th == 'MONTH':
+            plt.text(x=Predict_BA+2, y=current_Height-5, s=(f'  Current Height  \n [ {Predict_BA} Y, {current_Height} cm , Abnormal ]'), alpha=1, color='k',fontsize=15,bbox=box)
+
+        elif result_th == None :
+            plt.text(x=Predict_BA+2, y=current_Height-5, s=(f'  Current Height  \n [ {Predict_BA} Y, {current_Height} cm , Abnormal ]'), alpha=1, color='k',fontsize=15,bbox=box)
+
+        elif result_th != None :
+            plt.text(x=Predict_BA+2, y=current_Height-5, s=(f'  Current Height  \n [ {Predict_BA} Y, {current_Height} cm , {result_th} ]'), alpha=1, color='k',fontsize=15,bbox=box)
+
+        ## 18세 나이 + 예측 신장
+        plt.axvline(18,color='r',linestyle='--')
+        plt.axhline(Predict_Height,color='r',linestyle='--')
+
+        ## 예상위치 
+        plt.plot(18, Predict_Height, marker="o", markersize=10, color="r")
+        
+        ## 성별별 Annotation
+        if gender ==1 :
+            plt.text(x=13, y=Predict_Height+5, s=(f' Prediction Height  \n  [ 18 Y, {Predict_Height} cm ]'), alpha=1, color='r',fontsize=15,bbox=box)
+        elif gender == 0 :
+            plt.text(x=13, y=175, s=(f' Prediction Height  \n  [ 18 Y, {Predict_Height} cm ]'), alpha=1, color='r',fontsize=15,bbox=box)
+
+        ## 라인 주석처리
+        if gender == 1 :
+            plt.text(x=19,y=188.0,s='99th',alpha=1,color='#2e6c92',fontsize=10) #99
+            plt.text(x=19,y=185.3,s='97th',alpha=1,color='#276b93',fontsize=10) #97
+            plt.text(x=19,y=183.9,s='95th',alpha=1,color='#438cb9',fontsize=10) #95
+            plt.text(x=19,y=181.8,s='90th',alpha=1,color='#519cc8',fontsize=10) #90
+            plt.text(x=19,y=178.3,s='75th',alpha=1,color='#71afd1',fontsize=10) #75
+            plt.text(x=19,y=174.5,s='50th',alpha=1,color='#95beda',fontsize=10) #50
+            plt.text(x=19,y=170.8,s='25th',alpha=1,color='#b4cae2',fontsize=10) #25
+            plt.text(x=19,y=167.5,s='10th',alpha=1,color='#cfd6e9',fontsize=10) #10
+            plt.text(x=19,y=165.6,s='5th',alpha=1,color='#e3e3ef',fontsize=10) #5
+            plt.text(x=19,y=164.4,s='3rd',alpha=1,color='#f3eff6',fontsize=10) #3
+            plt.text(x=19,y=162.1,s='1st',alpha=1,color='#f7f3f9',fontsize=10) #1
+
+
+        if gender == 0 :
+            plt.text(x=19,y=173.2,s='99th',alpha=1,color='#a5383f',fontsize=10) #99
+            plt.text(x=19,y=170.8,s='97th',alpha=1,color='#b1484d',fontsize=10) #97
+            plt.text(x=19,y=169.5,s='95th',alpha=1,color='#cc4e53',fontsize=10) #95
+            plt.text(x=19,y=167.6,s='90th',alpha=1,color='#c84a4e',fontsize=10) #90
+            plt.text(x=19,y=164.4,s='75th',alpha=1,color='#f47265',fontsize=10) #75
+            plt.text(x=19,y=161.1,s='50th',alpha=1,color='#fb8e77',fontsize=10) #50
+            plt.text(x=19,y=157.8,s='25th',alpha=1,color='#fca78f',fontsize=10) #25
+            plt.text(x=19,y=154.9,s='10th',alpha=1,color='#fcbfaa',fontsize=10) #10
+            plt.text(x=19,y=153.2,s='5th',alpha=1,color='#fddbcd',fontsize=10) #5
+            plt.text(x=19,y=152.2,s='3rd',alpha=1,color='#feebe1',fontsize=10) #3
+            plt.text(x=19,y=150.2,s='1st',alpha=1,color='#fee8df',fontsize=10) #1    
+        
+
+
+        ## 범례 위치 적용
+        plt.legend(loc='upper left')
+        plt.grid(linestyle='--',color='k',linewidth=0.5,)
+        plt.xticks(ticks=range(3,19))
+        plt.yticks(ticks=range(80,201,10))
+        plt.title('3-18 Age & Height')
+        # pylab.savefig()
+        # plt.ioff()
+        # plt.savefig('./graph_save/sample.jpg', dpi=300, bbox_inches='tight')
+#         fig.savefig('C:\workspace\cakd3\qt\1107\boneage\graph_save\sample.jpg')
+
+        plt.savefig(graph_path)
+    except Exception as e :
+        print(e)
+       
+        
+
+    return result_th, Predict_Height, graph_path
+
+# --------------------------------------------
+def print_excel_file(name ,gender ,age ,height ,bone_age ,percentile, pred_height, openpath, graphpath):
+    
+    import win32com.client as win32
+    import xlsxwriter
+    import openpyxl
+    from openpyxl import Workbook
+    from openpyxl.styles import Font, Alignment, Border, Side, PatternFill, Color
+    from openpyxl.drawing.image import Image
+
+
+    wb = Workbook()      # 워크북을 생성한다.
+    ws = wb.active       # 워크 시트를 얻는다.
+    
+    
+    # 이미지 삽입
+    xray_img = Image(openpath) 
+    xray_img.height = 350
+    xray_img.width = 280
+    ws.add_image(xray_img,'F6')
+    
+    
+    graph_img= Image(graphpath)
+    graph_img.height = 395
+    graph_img.width = 280
+    ws.add_image(graph_img,'F23')
+    
+    
+    # title 
+    ws.merge_cells('A6:D7')  
+    ws['A6'] = 'Information'    
+    ca1 = ws['A6']
+    ca1.font = Font(name='맑은 고딕', size=15, bold=True) # .decode('cp949') << decode 필요하면 '맑은고딕'.~ 형식으로 이거쓰면됨
+    ca1.alignment = Alignment(horizontal='left', vertical='center')  # left right center / center bottom top
+    
+    a1 = ws['A7']
+    a2 = ws['B7']
+    a3 = ws['C7']
+    a4 = ws['D7']
+    box = Border(bottom=Side(border_style="thick",color='FF439C91'))
+    a1.border = box
+    a2.border = box
+    a3.border = box
+    a4.border = box
+    
+    ws.merge_cells('A9:D9') 
+    ws['A9'] = f'Name : {name}'  
+
+    info1 = ws['A9']
+    info1.font = Font(name='맑은 고딕', size=11, bold=False)
+    info1.alignment = Alignment(horizontal='left', vertical='center')
+
+    ws.merge_cells('A11:D11')  
+    ws['A11'] = f'Gender : {gender}'  
+    info1 = ws['A11']
+    info1.font = Font(name='맑은 고딕', size=11, bold=False)
+    info1.alignment = Alignment(horizontal='left', vertical='center')
+    
+    ws.merge_cells('A13:D13')  
+    ws['A13'] = f'Age : {age}'  
+    info2 = ws['A13']
+    info2.font = Font(name='맑은 고딕', size=11, bold=False)
+    info2.alignment = Alignment(horizontal='left', vertical='center')
+
+    ws.merge_cells('A15:D15')  
+    ws['A15'] = f'Height : {height}'  
+    info3 = ws['A15']
+    info3.font = Font(name='맑은 고딕', size=11, bold=False)
+    info3.alignment = Alignment(horizontal='left', vertical='center')
+
+    #------------------------------------------------------------------------
+    ws.merge_cells('A17:D18')  
+    ws['A17'] = 'Diagnosis Bone Age'    
+    ca2 = ws['A17']
+    ca2.font = Font(name='맑은 고딕', size=15, bold=True)
+    ca2.alignment = Alignment(horizontal='left', vertical='center')
+
+    b1 = ws['A18']
+    b2 = ws['B18']
+    b3 = ws['C18']
+    b4 = ws['D18']
+    box = Border(bottom=Side(border_style="thick",color='FF9ECDC8'))
+    b1.border = box
+    b2.border = box
+    b3.border = box
+    b4.border = box
+
+
+    ws.merge_cells('A20:D20')  
+    ws['A20'] = f'Bone Age : {bone_age}'  
+    info4 = ws['A20']
+    info4.font = Font(name='맑은 고딕', size=11, bold=False)
+    info4.alignment = Alignment(horizontal='left', vertical='center')
+
+    #--------------------------------------------------------------------------
+    ws.merge_cells('A25:D26')  
+    ws['A25'] = 'Predicted Height Growth'    
+    ca3 = ws['A25']
+    ca3.font = Font(name='맑은 고딕', size=15, bold=True)
+    ca3.alignment = Alignment(horizontal='left', vertical='center')
+
+    c1 = ws['A26']
+    c2 = ws['B26']
+    c3 = ws['C26']
+    c4 = ws['D26']
+    box = Border(bottom=Side(border_style="thick",color='FF9ECDC8'))
+    c1.border = box
+    c2.border = box
+    c3.border = box
+    c4.border = box
+
+
+    ws.merge_cells('A28:D28')  
+    ws['A28'] = f'Current height percentile : {percentile}'  
+    info5 = ws['A28']
+    info5.font = Font(name='맑은 고딕', size=11, bold=False)
+    info5.alignment = Alignment(horizontal='left', vertical='center')
+
+    ws.merge_cells('A30:D30')  
+    ws['A30'] = f'Predicted Height Growth : {pred_height}'  
+    info6_1 = ws['A30']
+    info6_1.font = Font(name='맑은 고딕', size=11, bold=False)
+    info6_1.alignment = Alignment(horizontal='left', vertical='center')
+    ws.merge_cells('A31:D31')  
+    ws['A31'] = '(based on 18 years old)'  
+    info6_2 = ws['A31']
+    info6_2.font = Font(name='맑은 고딕', size=11, bold=False, color='FF7B7B7B')
+    info6_2.alignment = Alignment(horizontal='left', vertical='center')
+    
+    # -----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
+    ws.merge_cells('A3:I3')  
+    ws['A3'] = 'Bone Predictor'    
+    ca0 = ws['A3']
+    ca0.font = Font(name='맑은 고딕', size=8, bold=False, color='FF7B7B7B')
+    ca0.alignment = Alignment(horizontal='left', vertical='center')
+
+    d1 = ws['A3']
+    d2 = ws['B3']
+    d3 = ws['C3']
+    d4 = ws['D3']
+    d5 = ws['E3']
+    d6 = ws['F3']
+    d7 = ws['G3']
+    d8 = ws['H3']
+    d9 = ws['I3']
+    box = Border(bottom=Side(border_style="thick",color='FF439C91'))
+    d1.border = box
+    box = Border(bottom=Side(border_style="thin",color='FF7B7B7B'))
+    d2.border = box
+    d3.border = box
+    d4.border = box
+    d5.border = box
+    d6.border = box
+    d7.border = box
+    d8.border = box
+    d9.border = box
+
+    import os
+    wb.save(f'./report_excel/{name}.xlsx') # 엑셀로 저장
+    os.system(f'start excel.exe ./report_excel/{name}.xlsx')
