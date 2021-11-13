@@ -498,14 +498,27 @@ def Height_prediction ( gender, BA, current_H, lms_df) :
     return pred_height
 
 def find_th(df,BA,Height):
+    df = df.reset_index()
+    find_df = df[(df['AGE'] >= BA) & (df['MONTH'] >= BA*12 )] >= Height
+    cdf = df[(df['AGE'] >= BA) & (df['MONTH'] >= BA*12 )]
+    find_df = find_df.drop('MONTH',axis=1)
+    find_df = find_df.iloc[0]
+    find_df = find_df[find_df==True].index
     try:
-        df = df.reset_index()
-        find_df = df[(df['AGE'] >= BA) & (df['MONTH'] >= int(BA*12) )] >= Height
-        find_df = find_df.iloc[0]
-        result_th = find_df[find_df==True].index[0]
-        return result_th
+        result_th = list(find_df)[0]
+
+        if cdf.loc[(cdf.index[0]) , '1st'] - 1.5 > Height :
+            result_th = 'Abnormal'
+
+        else:
+            pass
     except:
-        print('Abnormal growth. Please check again')
+        if cdf.loc[(cdf.index[0]) , '99th'] + 1.5 >= Height :
+            result_th = '99th'
+        else:
+            result_th='Abnormal'
+
+    return result_th
 
 # df_m = pd.read_csv('/content/drive/MyDrive/2차 프로젝트 원본 데이터/growth/male_year.csv',index_col='AGE')
 # df_fm = pd.read_csv('/content/drive/MyDrive/2차 프로젝트 원본 데이터/growth/female_year.csv',index_col='AGE')
@@ -519,13 +532,13 @@ def Height_graph(gender, Predict_BA, current_Height, df_m, df_fm, lms_df, graph_
     from datetime import datetime
     now = datetime.now()
     formattedDate = now.strftime("%Y%m%d_%H%M%S")
+    # filename = formattedDate+'jpg'
+    # graph_path
     
-    pngname = formattedDate +'.jpg'
-    graph_path = './graph_save/' + pngname
     try:
         plt.figure(figsize=(10,15))  
         
-        box={'facecolor':'w','edgecolor':'k','boxstyle':'round','alpha':0.5}
+        box={'facecolor':'w','edgecolor':'k','boxstyle':'round','alpha':1}
         
         if gender == 1:
             df = df_m.copy()
@@ -541,8 +554,8 @@ def Height_graph(gender, Predict_BA, current_Height, df_m, df_fm, lms_df, graph_
         Predict_Height = Height_prediction(gender,Predict_BA,current_Height, lms_df)
 
         ## x,y 축 라벨링
-        plt.xlabel('Age')
-        plt.ylabel('Height')
+        plt.xlabel('Age', fontsize=15)
+        plt.ylabel('Height', fontsize=15)
 
         # 현재 나이 (예측 골연령값) + 현재 신장
         plt.axvline(Predict_BA,color='k',linestyle='--')
@@ -552,15 +565,7 @@ def Height_graph(gender, Predict_BA, current_Height, df_m, df_fm, lms_df, graph_
         plt.plot(Predict_BA, current_Height, marker="o", markersize=10,color="k")
         
         ## 분위수 오류해결
-
-        if result_th == 'MONTH':
-            plt.text(x=Predict_BA+2, y=current_Height-5, s=(f'  Current Height  \n [ {Predict_BA} Y, {current_Height} cm , Abnormal ]'), alpha=1, color='k',fontsize=15,bbox=box)
-
-        elif result_th == None :
-            plt.text(x=Predict_BA+2, y=current_Height-5, s=(f'  Current Height  \n [ {Predict_BA} Y, {current_Height} cm , Abnormal ]'), alpha=1, color='k',fontsize=15,bbox=box)
-
-        elif result_th != None :
-            plt.text(x=Predict_BA+2, y=current_Height-5, s=(f'  Current Height  \n [ {Predict_BA} Y, {current_Height} cm , {result_th} ]'), alpha=1, color='k',fontsize=15,bbox=box)
+        plt.text(x=Predict_BA+2, y=current_Height-5, s=(f'  Current Height  \n [ {Predict_BA} Y, {current_Height} cm , {result_th} ]'), alpha=1, color='k',fontsize=15,bbox=box)
 
         ## 18세 나이 + 예측 신장
         plt.axvline(18,color='r',linestyle='--')
@@ -610,22 +615,18 @@ def Height_graph(gender, Predict_BA, current_Height, df_m, df_fm, lms_df, graph_
         plt.grid(linestyle='--',color='k',linewidth=0.5,)
         plt.xticks(ticks=range(3,19))
         plt.yticks(ticks=range(80,201,10))
-        plt.title('3-18 Age & Height')
-        # pylab.savefig()
-        # plt.ioff()
-        # plt.savefig('./graph_save/sample.jpg', dpi=300, bbox_inches='tight')
-#         fig.savefig('C:\workspace\cakd3\qt\1107\boneage\graph_save\sample.jpg')
+        plt.title('3-18 Age & Height', fontsize=15)
+        plt.savefig(graph_path,bbox_inches='tight')
 
-        plt.savefig(graph_path)
     except Exception as e :
         print(e)
        
         
 
-    return result_th, Predict_Height, graph_path
+    return result_th, Predict_Height
 
-# --------------------------------------------
-def print_excel_file(name ,gender ,age ,height ,bone_age ,percentile, pred_height, openpath, graphpath):
+# 승혜가만들어준 엑셀 --------------------------------------------
+def print_excel_file(name ,gender ,age ,height ,bone_age ,percentile, pred_height, openpath, graph_path, now):
     
     import win32com.client as win32
     import xlsxwriter
@@ -637,7 +638,9 @@ def print_excel_file(name ,gender ,age ,height ,bone_age ,percentile, pred_heigh
 
     wb = Workbook()      # 워크북을 생성한다.
     ws = wb.active       # 워크 시트를 얻는다.
-    
+    ws.column_dimensions['A'].width =10.30
+    ws.column_dimensions['D'].width =6.10
+
     
     # 이미지 삽입
     xray_img = Image(openpath) 
@@ -646,53 +649,69 @@ def print_excel_file(name ,gender ,age ,height ,bone_age ,percentile, pred_heigh
     ws.add_image(xray_img,'F6')
     
     
-    graph_img= Image(graphpath)
+    graph_img= Image(graph_path)
     graph_img.height = 395
     graph_img.width = 280
     ws.add_image(graph_img,'F23')
     
     
-    # title 
+# -----------------------------------------------------------------------
+# -----------------------------------------------------------------------
     ws.merge_cells('A6:D7')  
     ws['A6'] = 'Information'    
     ca1 = ws['A6']
-    ca1.font = Font(name='맑은 고딕', size=15, bold=True) # .decode('cp949') << decode 필요하면 '맑은고딕'.~ 형식으로 이거쓰면됨
-    ca1.alignment = Alignment(horizontal='left', vertical='center')  # left right center / center bottom top
-    
+    ca1.font = Font(name='맑은 고딕', size=15, bold=True)
+    ca1.alignment = Alignment(horizontal='left', vertical='center')
+
     a1 = ws['A7']
     a2 = ws['B7']
     a3 = ws['C7']
     a4 = ws['D7']
-    box = Border(bottom=Side(border_style="thick",color='FF439C91'))
+    box = Border(bottom=Side(border_style="thick",color='FF9ECDC8'))
     a1.border = box
     a2.border = box
     a3.border = box
     a4.border = box
-    
-    ws.merge_cells('A9:D9') 
-    ws['A9'] = f'Name : {name}'  
 
+
+    ws['A9'] = 'Name : '  
     info1 = ws['A9']
-    info1.font = Font(name='맑은 고딕', size=11, bold=False)
+    info1.font = Font(name='맑은 고딕', size=11, bold=True)
     info1.alignment = Alignment(horizontal='left', vertical='center')
 
-    ws.merge_cells('A11:D11')  
-    ws['A11'] = f'Gender : {gender}'  
-    info1 = ws['A11']
-    info1.font = Font(name='맑은 고딕', size=11, bold=False)
-    info1.alignment = Alignment(horizontal='left', vertical='center')
-    
-    ws.merge_cells('A13:D13')  
-    ws['A13'] = f'Age : {age}'  
-    info2 = ws['A13']
-    info2.font = Font(name='맑은 고딕', size=11, bold=False)
+    ws['B9'] = f'{name}'  
+    info1_1 = ws['B9']
+    info1_1.font = Font(name='맑은 고딕', size=11, bold=False)
+    info1_1.alignment = Alignment(horizontal='left', vertical='center')
+
+
+
+    ws['A11'] = 'Gender : '  
+    info2 = ws['A11']
+    info2.font = Font(name='맑은 고딕', size=11, bold=True)
     info2.alignment = Alignment(horizontal='left', vertical='center')
+    ws['B11'] = f'{gender} '  
+    info2_1 = ws['B11']
+    info2_1.font = Font(name='맑은 고딕', size=11, bold=False)
+    info2_1.alignment = Alignment(horizontal='left', vertical='center')
 
-    ws.merge_cells('A15:D15')  
-    ws['A15'] = f'Height : {height}'  
-    info3 = ws['A15']
-    info3.font = Font(name='맑은 고딕', size=11, bold=False)
+    ws['A13'] = 'Age : '  
+    info3 = ws['A13']
+    info3.font = Font(name='맑은 고딕', size=11, bold=True)
     info3.alignment = Alignment(horizontal='left', vertical='center')
+    ws['B13'] = f'{age}'  
+    info3_1 = ws['B13']
+    info3_1.font = Font(name='맑은 고딕', size=11, bold=False)
+    info3_1.alignment = Alignment(horizontal='left', vertical='center')
+
+    ws['A15'] = 'Height : '  
+    info4 = ws['A15']
+    info4.font = Font(name='맑은 고딕', size=11, bold=True)
+    info4.alignment = Alignment(horizontal='left', vertical='center')
+    ws['B15'] = f'{height}'  
+    info4_1 = ws['B15']
+    info4_1.font = Font(name='맑은 고딕', size=11, bold=False)
+    info4_1.alignment = Alignment(horizontal='left', vertical='center')
 
     #------------------------------------------------------------------------
     ws.merge_cells('A17:D18')  
@@ -712,14 +731,15 @@ def print_excel_file(name ,gender ,age ,height ,bone_age ,percentile, pred_heigh
     b4.border = box
 
 
-    ws.merge_cells('A20:D20')  
-    ws['A20'] = f'Bone Age : {bone_age}'  
-    info4 = ws['A20']
-    info4.font = Font(name='맑은 고딕', size=11, bold=False)
-    info4.alignment = Alignment(horizontal='left', vertical='center')
-
+    ws['A20'] = 'Bone Age : '  
+    info5 = ws['A20']
+    info5.font = Font(name='맑은 고딕', size=11, bold=True)
+    info5.alignment = Alignment(horizontal='left', vertical='center')
+    ws['B20'] = f'{bone_age}'  
+    info5_1 = ws['B20']
+    info5_1.font = Font(name='맑은 고딕', size=11, bold=False)
+    info5_1.alignment = Alignment(horizontal='right', vertical='center')
     #--------------------------------------------------------------------------
-    ws.merge_cells('A25:D26')  
     ws['A25'] = 'Predicted Height Growth'    
     ca3 = ws['A25']
     ca3.font = Font(name='맑은 고딕', size=15, bold=True)
@@ -736,26 +756,34 @@ def print_excel_file(name ,gender ,age ,height ,bone_age ,percentile, pred_heigh
     c4.border = box
 
 
-    ws.merge_cells('A28:D28')  
-    ws['A28'] = f'Current height percentile : {percentile}'  
-    info5 = ws['A28']
-    info5.font = Font(name='맑은 고딕', size=11, bold=False)
-    info5.alignment = Alignment(horizontal='left', vertical='center')
-
-    ws.merge_cells('A30:D30')  
-    ws['A30'] = f'Predicted Height Growth : {pred_height}'  
-    info6_1 = ws['A30']
+    ws['A28'] = 'Current height percentile : '  
+    info6 = ws['A28']
+    info6.font = Font(name='맑은 고딕', size=11, bold=True)
+    info6.alignment = Alignment(horizontal='left', vertical='center')
+    ws['D28'] = f'{percentile} '  
+    info6_1 = ws['D28']
     info6_1.font = Font(name='맑은 고딕', size=11, bold=False)
     info6_1.alignment = Alignment(horizontal='left', vertical='center')
+
+    ws['A30'] = 'Predicted Height Growth : '  
+    info7_1 = ws['A30']
+    info7_1.font = Font(name='맑은 고딕', size=11, bold=True)
+    info7_1.alignment = Alignment(horizontal='left', vertical='center')
+    ws['D30'] = f'{pred_height}'  
+    info7_2 = ws['D30']
+    info7_2.font = Font(name='맑은 고딕', size=11, bold=False)
+    info7_2.alignment = Alignment(horizontal='left', vertical='center')
+
+
     ws.merge_cells('A31:D31')  
     ws['A31'] = '(based on 18 years old)'  
-    info6_2 = ws['A31']
-    info6_2.font = Font(name='맑은 고딕', size=11, bold=False, color='FF7B7B7B')
-    info6_2.alignment = Alignment(horizontal='left', vertical='center')
-    
-    # -----------------------------------------------------------------------
-    # -----------------------------------------------------------------------
-    ws.merge_cells('A3:I3')  
+    info7_3 = ws['A31']
+    info7_3.font = Font(name='맑은 고딕', size=11, bold=False, color='FF7B7B7B')
+    info7_3.alignment = Alignment(horizontal='left', vertical='center')
+
+# -----------------------------------------------------------------------
+# -----------------------------------------------------------------------
+    ws.merge_cells('A3:G3')  
     ws['A3'] = 'Bone Predictor'    
     ca0 = ws['A3']
     ca0.font = Font(name='맑은 고딕', size=8, bold=False, color='FF7B7B7B')
@@ -782,6 +810,18 @@ def print_excel_file(name ,gender ,age ,height ,bone_age ,percentile, pred_heigh
     d8.border = box
     d9.border = box
 
+# -----------------------------------------------------------------------
+# -----------------------------------------------------------------------
+    DIG_date = now.strftime("%Y-%m-%d  %H:%M:%S")
+
+    ws.merge_cells('H3:I3')  
+    ws['H3'] = DIG_date 
+    ca1 = ws['H3']
+    ca1.font = Font(name='맑은 고딕', size=8, bold=False, color='FF7B7B7B')
+    ca1.alignment = Alignment(horizontal='right', vertical='center')
+
+# -----------------------------------------------------------------------
+# -----------------------------------------------------------------------
     import os
     wb.save(f'./report_excel/{name}.xlsx') # 엑셀로 저장
     os.system(f'start excel.exe ./report_excel/{name}.xlsx')

@@ -1,4 +1,4 @@
-#-----------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------
 import pandas as pd
 import seaborn as sns
 import os
@@ -9,8 +9,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets, uic
 from PyQt5.QtWidgets import QWidget, QMainWindow, QLabel, QPushButton, QApplication, QFileDialog, QMessageBox, QDialog, QFrame
 from PyQt5.uic import loadUi
 import numpy as np
-import torch
-import tensorflow.keras as tf
+
 import cv2
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -18,8 +17,8 @@ from datetime import datetime
 import bone1 as bone
 
 # weight path --------------------------------------------------------------------
-model_path = './weight/model.pt'
-tjnet_path = './weight/tjnet24.h5'
+# model_path = './weight/model.pt'
+# tjnet_path = './weight/tjnet24.h5'
 
 #  form --------------------------------------------------------------------------
 form_secondwindow =uic.loadUiType("dashboard1.ui")[0]
@@ -34,9 +33,11 @@ df_fm = pd.read_csv('./data/female_year.csv',index_col='AGE')
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
+
+        
         MainWindow.resize(1000, 800)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("./data/boneage_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("./data/boneage_icon.jpg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setStyleSheet("background-color: rgb(247, 242, 231);\n"
 "border-color: rgb(121, 122, 126);")
@@ -53,7 +54,7 @@ class Ui_MainWindow(object):
         self.time.setGeometry(QtCore.QRect(10, 10, 194, 22))
         self.time.setBaseSize(QtCore.QSize(0, 0))
         font = QtGui.QFont()
-        font.setFamily("한컴 말랑말랑 Regular")
+        font.setFamily("Calibri")
         font.setPointSize(10)
         font.setBold(False)
         font.setWeight(50)
@@ -70,7 +71,7 @@ class Ui_MainWindow(object):
         self.progressBar.setEnabled(False)
         self.progressBar.setGeometry(QtCore.QRect(570, 660, 290, 23))
         font = QtGui.QFont()
-        font.setFamily("한컴 말랑말랑 Regular")
+        font.setFamily("Calibri")
         font.setPointSize(12)
         self.progressBar.setFont(font)
         self.progressBar.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
@@ -92,8 +93,8 @@ class Ui_MainWindow(object):
         self.title_2.setGeometry(QtCore.QRect(100, 230, 741, 100)) # 시작위치 x,y / 너비,높이
         font_1 = QtGui.QFont()
         font_2 = QtGui.QFont()
-        font_1.setFamily("Algerian")
-        font_2.setFamily("Algerian")
+        font_1.setFamily("Calibri")
+        font_2.setFamily("Calibri")
         font_1.setPointSize(52)
         font_2.setPointSize(60)
         font_1.setBold(True)
@@ -162,8 +163,12 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
+        self.next_button.setText("Loading")
+        if self.next_button.text() == "Loading":
+            self.progressbar_change(MainWindow)
+
         # self.progressBar.valueChanged['int'].connect(self.progressbar_change)
-        self.next_button.clicked.connect(self.progressbar_change)
+        # self.next_button.clicked.connect(self.progressbar_change)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -172,28 +177,28 @@ class Ui_MainWindow(object):
         self.time.setDisplayFormat(_translate("MainWindow", "yyyy-MM-dd  hh:mm"))
         self.title_1.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" color:#797a7e;\">Bone Age</span></p></body></html>"))
         self.title_2.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" color:#797a7e;\">predictor</span></p></body></html>"))
-        self.next_button.setText(_translate("MainWindow", "Loading, click"))
+        self.next_button.setText(_translate("MainWindow", "Loading"))
 
-    def progressbar_change(self):
+    def progressbar_change(self, MainWindow):
         self.next_button.setEnabled(False)
-        self.next_button.setText("Loading")
+        # self.next_button.setText("Loading")
         while self.next_button.text() == "Loading":
             self.progressBar.setValue(np.random.randint(40,70))
             try :
-                global tjnet_path
-                global model_path
-                global tjnet
-                tjnet = tf.models.load_model(tjnet_path, compile=False)
-                self.progressBar.setValue(np.random.randint(70,80))
-                global yolo
-                yolo = torch.load(model_path, map_location='cpu')
+                # global tjnet_path
+                # global model_path
+                # global tjnet
+                # tjnet = tf.models.load_model(tjnet_path, compile=False)
+                # self.progressBar.setValue(np.random.randint(70,80))
+                # global yolo
+                # yolo = torch.load(model_path, map_location='cpu')
 
-                self.next_button.setText("Completed, Strat")
-                if self.next_button.text() == "Completed, Strat":
+                self.next_button.setText("Wait a minute")
+                if self.next_button.text() == "Wait a minute":
                     self.progressBar.setValue(100)
                     
-                    MainWindow.close()
-                    widget.show()
+                    # MainWindow.close()
+                    # widget.show()
 
                     print('True')
 
@@ -208,9 +213,10 @@ class secondwindow(QDialog, QFrame, form_secondwindow):
     def __init__(self):
         super(secondwindow, self).__init__()
         loadUi("dashboard1.ui", self)
+        self.setWindowIcon(QtGui.QIcon('./data/boneage_icon.png'))
         
         font = QtGui.QFont()
-        font.setFamily("한컴 말랑말랑 Regular")
+        font.setFamily("Calibri")
         font.setPointSize(10)
         font.setBold(False)
         font.setWeight(50)
@@ -218,12 +224,7 @@ class secondwindow(QDialog, QFrame, form_secondwindow):
         self.time2.setStyleSheet("color: rgb(047, 079, 079);")
         self.time2.setDateTime(QDateTime.currentDateTime())
         self.image_frame = QLabel(self)
-        self.progressBar2.setOrientation(QtCore.Qt.Horizontal)
-        self.progressBar2.setStyleSheet("color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:0, stop:0 rgba(0, 0, 0, 0), stop:1 rgba(121, 122, 126));")
-        self.progressBar2.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
-        self.progressBar2.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.progressBar2.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
-
+        
              # 이미지 불러오기
     def filedialog_open(self):
         global fname
@@ -256,7 +257,7 @@ class secondwindow(QDialog, QFrame, form_secondwindow):
     
     # ok버튼 클릭시 third page 로 텍스트 넘기기 
     def push_ok_button(self):
-        self.v.setText("v")
+        self.ok_button.setText("OK")
         try : 
             th.input_name2.setText(name_txt) 
             th.input_name2.setReadOnly(True)
@@ -271,7 +272,18 @@ class secondwindow(QDialog, QFrame, form_secondwindow):
         except : 
             QMessageBox.about(self, 'Warning', 'Enter your Age.')
         
-    
+    def reset_info(self):
+        se.input_name.setText("")
+        se.input_age.setText("")
+        se.input_height.setText("")
+
+        th.input_name2.setText("") 
+        th.input_age2.setText("")
+        th.input_gender2.setText("")
+        
+        se.ok_button.setText("Insert")
+
+
     # Female, Male 버튼
     def female(self):
         global gender, gender_text
@@ -286,84 +298,89 @@ class secondwindow(QDialog, QFrame, form_secondwindow):
 
     # # 다음페이지로 
     def gotonextpage(self):
-        try:
-            self.next_button2.setEnabled(False)
-            self.progressBar2.setValue(np.random.randint(0,5))
-            self.next_button2.setText("Loading")
+        if se.ok_button.text() != "Insert":
+            try:
+                self.next_button2.setEnabled(False)
+                self.progressBar2.setValue(np.random.randint(0,5))
+                self.next_button2.setText("Loading")
 
-            now = datetime.now()
-            formattedDate = now.strftime("%Y%m%d_%H%M%S")
-            global filename, graph_path
-            filename = formattedDate +'.jpg'
-            pngname = formattedDate +'.png'
+                global filename, graph_path, formattedDate, pngname, now
+                now = datetime.now()
+                
+                formattedDate = now.strftime("%Y%m%d_%H%M%S")
+                filename = formattedDate +'.jpg'
 
-            save_path = './img_save/' + filename
-            # graph_path = './graph_save/' + pngname
-            graph_path = 'img.png'
+                save_path = './img_save/' + filename
+                graph_path = './graph_save/' + filename
 
-            # global openpath
-            openimg = bone.read_img(openpath)
-            self.progressBar2.setValue(np.random.randint(10,20))
-            mask = bone.make_mask(openimg)
-            masked = bone.cut_mask(openimg, mask)
-            self.progressBar2.setValue(np.random.randint(25,40))
-            rotated_img = bone.img_rotation(masked)
-            self.progressBar2.setValue(np.random.randint(50,60))
-            bone_img = bone.Decomposing(rotated_img,60,55,50,25)
-            self.progressBar2.setValue(np.random.randint(70,80))
-            cv2.imwrite(save_path, bone_img)
-        
-            # global yolo
-            crops, yoloimg, result = bone.yolo_crop_img(save_path, yolo)
-            self.progressBar2.setValue(np.random.randint(95,100))
-            h,w,c = yoloimg.shape
-            widget.setCurrentIndex(widget.currentIndex()+1)
+                # global openpath
+                openimg = bone.read_img(openpath)
+                self.progressBar2.setValue(np.random.randint(10,20))
+                mask = bone.make_mask(openimg)
+                masked = bone.cut_mask(openimg, mask)
+                self.progressBar2.setValue(np.random.randint(25,40))
+                rotated_img = bone.img_rotation(masked)
+                self.progressBar2.setValue(np.random.randint(50,60))
+                bone_img = bone.Decomposing(rotated_img,60,55,50,25)
+                self.progressBar2.setValue(np.random.randint(70,80))
+                cv2.imwrite(save_path, bone_img)
             
-            qImg = QtGui.QImage(yoloimg, w, h, w*c, QtGui.QImage.Format_RGB888)
-            th.yolo_img = QtGui.QPixmap.fromImage(qImg)
-            th.yolo_img = th.yolo_img.scaled(411,521)
-            th.yolo_frame.move(40,80)
-            th.yolo_frame.setPixmap(th.yolo_img)  # 이미지 세팅
-            th.yolo_frame.setContentsMargins(0,0,0,0)
-            th.yolo_frame.resize(411,521)  # 프레임 스케일 
+                # global yolo
+                crops, yoloimg, result = bone.yolo_crop_img(save_path, yolo)
+                self.progressBar2.setValue(np.random.randint(95,100))
+                h,w,c = yoloimg.shape
+                widget.setCurrentIndex(widget.currentIndex()+1)
+                
+                qImg = QtGui.QImage(yoloimg, w, h, w*c, QtGui.QImage.Format_RGB888)
+                th.yolo_img = QtGui.QPixmap.fromImage(qImg)
+                th.yolo_img = th.yolo_img.scaled(411,521)
+                th.yolo_frame.move(40,80)
+                th.yolo_frame.setPixmap(th.yolo_img)  # 이미지 세팅
+                th.yolo_frame.setContentsMargins(0,0,0,0)
+                th.yolo_frame.resize(411,521)  # 프레임 스케일 
 
-            try : 
-                X = bone.out_crop_img(crops, gender)
-                global prediction_BA
-                prediction_BA = bone.predict_zscore(X, tjnet)  
-                prediction_BA = prediction_BA.round(2)
-                # ---------------------------------------------------------------
-                th.input_gender2.setText(gender_text) 
-                th.input_gender2.setReadOnly(True)
-                th.pred.setText(f'{prediction_BA}') 
-                th.pred.setReadOnly(True)
-            except : 
-                th.pred.setReadOnly(True)
-                th.pred.setText("Please enter your gender.")   
+                try : 
+                    X = bone.out_crop_img(crops, gender)
+                    global prediction_BA
+                    prediction_BA = bone.predict_zscore(X, tjnet)  
+                    prediction_BA = prediction_BA.round(2)
+                    # ---------------------------------------------------------------
+                    th.input_gender2.setText(gender_text) 
+                    th.input_gender2.setReadOnly(True)
+                    th.pred.setText(f'{prediction_BA}') 
+                    th.pred.setReadOnly(True)
+                except : 
+                    th.pred.setReadOnly(True)
+                    th.pred.setText("Please enter your gender.")   
+                
+                global result_th, Predict_Height, df_m, df_fm, lms_df
+                current_Height = float(height_txt)
+                try : 
+                    result_th, Predict_Height = bone.Height_graph(gender, prediction_BA, current_Height, df_m, df_fm, lms_df, graph_path)
+                    th.result_th.setText(f'{Predict_Height}, ({result_th})')
+                except Exception as e:
+                    print(e)
+
+
+            except: 
+                QMessageBox.about(self, 'Warning', 'Enter information.')  
+                self.next_button2.setText("NEXT >>")
+                self.progressBar2.setValue(0)
+                self.next_button2.setEnabled(True) 
             
-            global result_th, Predict_Height, df_m, df_fm, lms_df
-            current_Height = float(height_txt)
-            try : 
-                result_th, Predict_Height, graph_path = bone.Height_graph(gender, prediction_BA, current_Height, df_m, df_fm, lms_df, graph_path)
-                th.result_th.setText(f'{Predict_Height}, ({result_th})')
-            except Exception as e:
-                print(e)
-
-
-        except: 
-            QMessageBox.about(self, 'Warning', 'Enter information.')  
-            self.next_button2.setText("NEXT >>")
-            self.progressBar2.setValue(0)
-            self.next_button2.setEnabled(True) 
+        else : 
+            QMessageBox.about(self, 'Warning', 'Enter information.')
 
 #-----------------------------------------------------------------------------------------------------
 class thirdwindow(QDialog):
     def __init__(self):
         super(thirdwindow, self).__init__()
         loadUi("dashboard2.ui", self)
+
+        self.setWindowIcon(QtGui.QIcon('./data/boneage_icon.png'))
         font = QtGui.QFont()
 
-        font.setFamily("한컴 말랑말랑 Regular")
+        font.setFamily("Calibri")
         font.setPointSize(10)
         font.setBold(False)
         font.setWeight(50)
@@ -381,9 +398,13 @@ class thirdwindow(QDialog):
         se.next_button2.setText("NEXT >>")
         se.progressBar2.setValue(0)
         se.next_button2.setEnabled(True)
+        se.ok_button.setText("Insert")
+        
         th.print_button.setText("print>>")
+        th.print_button.setEnabled(True)
         th.progressBar3.setValue(0)
-        se.v.setText("")
+        
+        # se.v.setText("")
 
 
     # 엑셀저장 
@@ -395,8 +416,7 @@ class thirdwindow(QDialog):
 
         global result_th, graph_path
 
-
-        bone.print_excel_file(name_txt , gender_text , float(age_txt) , float(height_txt) , prediction_BA , result_th, Predict_Height, openpath, graph_path)
+        bone.print_excel_file(name_txt , gender_text , float(age_txt) , float(height_txt) , prediction_BA , result_th, Predict_Height, openpath, graph_path, now)
         print('save_done')
         self.progressBar3.setValue(100)
         self.print_button.setText("Save!")
@@ -418,7 +438,7 @@ if __name__ == "__main__":
     # app.exec_()
     # 화면전환용 위젯 생성
     widget = QtWidgets.QStackedWidget()
-    
+
     # 레이아웃 인스턴스 생성
     se = secondwindow()
     th = thirdwindow()
@@ -432,10 +452,29 @@ if __name__ == "__main__":
     widget.setFixedWidth(1000)
     
     widget.setWindowTitle('Bone Age')
-    widget.setWindowIcon(QtGui.QIcon('./data/boneage_icon.png'))
+    widget.setWindowIcon(QtGui.QIcon('./data/boneage_icon.jpg'))
     widget.setFixedWidth(1000)
     
+
     MainWindow.show()
+    import torch
+    import tensorflow.keras as tf
+    model_path = './weight/model.pt'
+    tjnet_path = './weight/tjnet24.h5'
+
+    global tjnet
+    tjnet = tf.models.load_model(tjnet_path, compile=False)
+
+    global yolo
+    yolo = torch.load(model_path, map_location='cpu')
+
+
+    MainWindow.close()
+
+
+    
+    widget.show()
+    
 
     sys.exit(app.exec_())
     # MainWindow.close()

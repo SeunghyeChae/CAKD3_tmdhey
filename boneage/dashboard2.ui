@@ -143,8 +143,10 @@ color: rgb(121, 122, 126);
    </property>
    <property name="font">
     <font>
-     <family>한컴 말랑말랑 Regular</family>
-     <pointsize>12</pointsize>
+     <family>Calibri</family>
+     <pointsize>15</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
     </font>
    </property>
    <property name="styleSheet">
@@ -410,8 +412,8 @@ border-color: rgb(121, 122, 126);</string>
     </property>
     <property name="font">
      <font>
-      <family>한컴 말랑말랑 Regular</family>
-      <pointsize>11</pointsize>
+      <family>Calibri</family>
+      <pointsize>12</pointsize>
       <weight>50</weight>
       <italic>false</italic>
       <bold>false</bold>
@@ -423,6 +425,7 @@ border-color: rgb(121, 122, 126);</string>
 border:none;
 border-bottom: 2px solid rgb(35, 35, 35);
 color: rgb(50, 50, 50);
+
 border-bottom-right-radius: 8px;
 border-bottom-left-radius: 8px;
 border-top-right-radius: 8px;
@@ -435,7 +438,7 @@ QPushButton#pushButton:pressed{
 }</string>
     </property>
     <property name="text">
-     <string>print &gt;&gt;</string>
+     <string>print&gt;&gt;</string>
     </property>
     <property name="icon">
      <iconset>
@@ -460,8 +463,8 @@ QPushButton#pushButton:pressed{
     </property>
     <property name="font">
      <font>
-      <family>한컴 말랑말랑 Regular</family>
-      <pointsize>11</pointsize>
+      <family>Calibri</family>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="styleSheet">
@@ -579,9 +582,9 @@ QPushButton#pushButton:pressed{
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>690</x>
+      <x>710</x>
       <y>720</y>
-      <width>106</width>
+      <width>91</width>
       <height>29</height>
      </rect>
     </property>
@@ -589,7 +592,17 @@ QPushButton#pushButton:pressed{
      <enum>Qt::NoFocus</enum>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:0, stop:0 rgba(0, 0, 0, 0), stop:1 rgba(255, 255, 255, 0));</string>
+     <string notr="true">background-color: rgb(52, 46, 88);
+
+border:none;
+
+color: rgb(255, 255, 255);
+border-bottom-right-radius: 8px;
+font: 63 9pt &quot;Bahnschrift SemiBold&quot;;
+border-bottom-left-radius: 8px;
+border-top-right-radius: 8px;
+border-top-left-radius: 8px;
+</string>
     </property>
     <property name="text">
      <string notr="true">exit</string>
