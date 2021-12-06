@@ -1,0 +1,12 @@
+test/mnist/label.txt.*
+test/mnist/data.txt.*
+test/mnist/trainer_test1
+test/mnist/trainer_test_0413/
+test/celeba/trainer_test/
+test/visual/
+test/deploy
+visual/
+test_batch_cam.py
+run
+run_cam.py
+*.pyc

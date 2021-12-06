@@ -78,3 +78,26 @@
 *.jpg
 000. 2차 플젝/boneage/img_save/20211108_142750.jpg
 000. 2차 플젝/boneage/img_save/20211108_154857.jpg
+000. 3차 플젝/lung-segmentation-master (1)/src/models.py
+000. 3차 플젝/lung-segmentation-master (1)/src/metrics.py
+000. 3차 플젝/lung-segmentation-master (1)/src/data.py
+000. 3차 플젝/lung-segmentation-master (1)/splits.pk
+000. 3차 플젝/lung-segmentation-master (1)/sandbox.ipynb
+000. 3차 플젝/lung-segmentation-master (1)/readme.md
+000. 3차 플젝/lung-segmentation-master (1)/models/unet-6v.pt
+000. 3차 플젝/lung-segmentation-master (1)/models/unet-2v.pt
+000. 3차 플젝/lung-segmentation-master (1)/models.py
+000. 3차 플젝/lung-segmentation-master (1)/metrics.py
+000. 3차 플젝/lung-segmentation-master (1)/main.ipynb
+000. 3차 플젝/lung-segmentation-master (1)/LICENSE.md
+000. 3차 플젝/lung-segmentation-master (1)/images/unet-6v-train-hist.png
+000. 3차 플젝/lung-segmentation-master (1)/images/unet-5v-train-hist.png
+000. 3차 플젝/lung-segmentation-master (1)/images/unet-4v-train-hist.png
+000. 3차 플젝/lung-segmentation-master (1)/images/unet-3v-train-hist.png
+000. 3차 플젝/lung-segmentation-master (1)/images/unet-2v-train-hist.png
+000. 3차 플젝/lung-segmentation-master (1)/images/unet-1v-train-hist.png
+000. 3차 플젝/lung-segmentation-master (1)/images/obtained-results.png
+000. 3차 플젝/lung-segmentation-master (1)/images/data-example.png
+000. 3차 플젝/lung-segmentation-master (1)/data.py
+000. 3차 플젝/lung-segmentation-master (1)/models/unet-6v.pt
+000. 3차 플젝/lung-segmentation-master (1)/models/unet-2v.pt
