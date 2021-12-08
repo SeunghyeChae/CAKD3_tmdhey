@@ -282,7 +282,7 @@ color: rgb(48, 75, 173);</string>
     <property name="font">
      <font>
       <family>Calibri</family>
-      <pointsize>28</pointsize>
+      <pointsize>20</pointsize>
      </font>
     </property>
     <property name="styleSheet">
