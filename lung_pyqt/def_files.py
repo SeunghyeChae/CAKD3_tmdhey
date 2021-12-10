@@ -91,3 +91,19 @@ def prep(og_img_path,size):
     
     return cvt_img
 
+def make_csv_file(name,result, nor_prob, nn_prob, pneu_prob, img_path, dignosis_time):
+    original_df = pd.read_csv('./diagnosis_result/diagnosis_file.csv')
+
+  # concat
+  # original_df = pd.concat([original_df,input_df],axis=0)
+    original_df = original_df.append({'Name' : f'{name}' , 'Result' : f'{result}', 
+                                      'normal_prob' : f'{nor_prob}',
+                                      'notnormal_prob' : f'{nn_prob}',
+                                      'pneumonia_prob' : f'{pneu_prob}',
+                                      'Diagonis_time' : f'{dignosis_time}',
+                                      'Image_path' : f'{img_path}'} ,
+                                     ignore_index=True)
+    #save 
+    original_df.to_csv('./diagnosis_result/diagnosis_file.csv',index=0)
+
+

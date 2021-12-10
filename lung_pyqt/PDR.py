@@ -21,33 +21,37 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import warnings
 warnings.filterwarnings('ignore')
+import datetime as dt
 
-form_secondwindow =uic.loadUiType("page1.ui")[0]
+form_secondwindow =uic.loadUiType("page1_ver2.ui")[0]
 global counter
 counter = 0
 class Ui_main(object):
     def setupUi(self, main):
         main.setObjectName("main")
+        main.setWindowFlag(QtCore.Qt.FramelessWindowHint)
+        main.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         main.resize(1200, 900)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("img/icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         main.setWindowIcon(icon)
-        main.setStyleSheet("background-color: rgb(183, 207, 229); border-radius: 30px;")
+        main.setStyleSheet("background-color: rgb(183, 207, 229); border-radius: 100px; ")
+
         self.main_frame = QtWidgets.QFrame(main)
         self.main_frame.setGeometry(QtCore.QRect(10, 10, 1181, 881))
-        self.main_frame.setStyleSheet("background-color: rgb(48, 75, 173);")
+        self.main_frame.setStyleSheet("background-color: rgb(56, 58, 89);;")
         self.main_frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.main_frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.main_frame.setObjectName("main_frame")
         self.title = QtWidgets.QLabel(self.main_frame)
         self.title.setGeometry(QtCore.QRect(100, 520, 1001, 261))
         font = QtGui.QFont()
-        font.setFamily("Adobe 고딕 Std B")
-        font.setPointSize(48)
+        font.setFamily("GangwonEduPower")
+        font.setPointSize(30)
         font.setBold(True)
         font.setWeight(75)
         self.title.setFont(font)
-        self.title.setStyleSheet("color: rgb(255, 255, 255);")
+        self.title.setStyleSheet("color: rgb(255, 216, 247);")
         self.title.setAlignment(QtCore.Qt.AlignCenter)
         self.title.setObjectName("title")
         self.icon_img = QtWidgets.QLabel(self.main_frame)
@@ -77,18 +81,20 @@ class Ui_main(object):
 "}\n"
 "\n"
 "")
-        self.progressBar.setProperty("value", 30)
+        self.progressBar.setProperty("value", 0)
         self.progressBar.setAlignment(QtCore.Qt.AlignCenter)
         self.progressBar.setTextVisible(True)
         self.progressBar.setInvertedAppearance(False)
         self.progressBar.setTextDirection(QtWidgets.QProgressBar.TopToBottom)
         self.progressBar.setObjectName("progressBar")
-        
         self.loading = QtWidgets.QLabel(self.main_frame)
         self.loading.setGeometry(QtCore.QRect(540, 752, 111, 20))
         self.loading.setStyleSheet("color: rgb(200, 200, 200);")
         self.loading.setAlignment(QtCore.Qt.AlignCenter)
         self.loading.setObjectName("loading")
+
+        # Timer---------------------------------
+        self.timer = QtCore.QTimer()
 
         # Timer---------------------------------
         self.timer = QtCore.QTimer()
@@ -102,16 +108,11 @@ class Ui_main(object):
         self.title.setText(_translate("main", "Pulmonary Disease Reader"))
         self.loading.setText(_translate("main", "    loading..."))
         main.show()
-        self.timer.start(34)
+        self.timer.start(30)
         self.timer.timeout.connect(self.progress)
 
-        # 모델 넣는자리
-        # import tensorflow.keras as tf
-
-        # tjnet_path = './weight/tjnet24.h5'
-
-        # global tjnet
-        # tjnet = tf.models.load_model(tjnet_path, compile=False)
+        # 모델 
+        
 
     def progress(self):
         # set value to progress bar
@@ -124,26 +125,22 @@ class Ui_main(object):
             main.close()
             widget.show()
 
-        counter +=1
-        
-        
+        counter += 0.7
 
         return counter
-
 #--------------------------------------------------------------------------------------
 
 class page1(QDialog, QFrame, form_secondwindow):
     def __init__(self):
         super(page1, self).__init__()
-        loadUi("page1.ui", self)
+        loadUi("page1_ver2.ui", self)
 
         self.time.setDateTime(QDateTime.currentDateTime())
         self.image_frame = QLabel(self)
-        self.progressBar_page1.setProperty("value", 0)
-
+        
              # 이미지 불러오기
     def filedialog_open(self):
-        global fname
+        global fname, predicted_result
         
         fname = QFileDialog.getOpenFileName(self, 'Open File', '',
                                             'All File(*);; Image File(*.png *.jpg)')
@@ -154,11 +151,11 @@ class page1(QDialog, QFrame, form_secondwindow):
             global openpath
             openpath = fname[0]
             self.pixmap = QtGui.QPixmap(openpath)            
-            self.pixmap = self.pixmap.scaled(550,640) # 이미지 스케일 변화
-            self.image_frame.move(80,90) # 시작위치
+            self.pixmap = self.pixmap.scaled(510,601) # 이미지 스케일 변화
+            self.image_frame.move(122,120) # 시작위치
             self.image_frame.setPixmap(self.pixmap)  # 이미지 세팅
             self.image_frame.setContentsMargins(0,0,0,0)
-            self.image_frame.resize(550,640)  # 프레임 스케일
+            self.image_frame.resize(510,601)  # 프레임 스케일
         
             #------------------------------------------------
             # 전처리
@@ -166,17 +163,46 @@ class page1(QDialog, QFrame, form_secondwindow):
             img = img.reshape(1,128,128,3)
             #------------------------------------------------
             # Class 예측
-            pred = chexnet_model.predict(img)
-            predicted_result= np.argmax(pred)
+            pred_ = chexnet_model.predict(img)
+            pred_max= np.argmax(pred_)
                         
-            if predicted_result== 0:
+            if pred_max == 0:
                 predicted_result= 'NORMAL'
-            elif predicted_result==1:
+            elif pred_max == 1:
                 predicted_result= 'NOT NORMAL'
-            elif predicted_result==2:
+            elif pred_max == 2:
                 predicted_result= 'PNEUMONIA'
                 
             self.pred.setText(f'{predicted_result}')
+            
+            if pred_[0][0] <0.01:
+                pred_[0][0] = 0
+            else: pred_[0][0]= pred_[0][0]
+
+            if pred_[0][1] <0.01:
+                pred_[0][1] = 0
+            else: pred_[0][1]= pred_[0][1]
+
+            if pred_[0][2] <0.01:
+                pred_[0][2] = 0
+            else: pred_[0][2]= pred_[0][2]
+
+            global normal_p, nn_p, pneu_p
+            
+            normal_p= str(round(pred_[0][0]*100,2))
+            nn_p= str(round(pred_[0][1]*100,2))
+            pneu_p= str(round(pred_[0][2]*100,2))
+            
+            
+            normal= 'normal : ' + str(round(pred_[0][0]*100,2)) + '%'
+            nn= 'not normal : ' + str(round(pred_[0][1]*100,2)) + '%'
+            pneu= 'pneumonia : ' + str(round(pred_[0][2]*100,2)) + '%'
+            
+                                       
+            self.normal_label.setText(normal)
+            self.nn_label.setText(f'{nn}')
+            self.pneu_label.setText(f'{pneu}')
+            
             
 
             
@@ -184,10 +210,36 @@ class page1(QDialog, QFrame, form_secondwindow):
         else:
             QMessageBox.about(self, 'Warning', 'No file selected.')
         
-        
+
+            
     def input_pred(self):
         self.pred.setText(f'{predicted_result}')
+        self.normal_label.setText(f'{normal}')
+        self.nn_label.setText(f'{nn}')
+        self.pneu_label.setText(f'{pneu}')
+                                       
+    def info(self):
+        global name_txt
+        name_txt= self.input_name.text()
 
+        
+    def save_data(self):
+        import datetime as dt
+        self.pushButton_2.setText("OK")
+        dignosis_time = dt.datetime.now()
+        
+        try :
+            deff.make_csv_file(name_txt,predicted_result,normal_p,nn_p,pneu_p, openpath,dignosis_time )
+        except : 
+            QMessageBox.about(self, 'Warning', 'Enter your name.')
+            
+
+#         if name_txt == "":
+#             name_txt = "No name"
+        #-------------------------------------------------------
+        # csv file 만들기
+        
+#         self.PushButton_2.setText("OK") # 누르면 ok로 바뀌면서 저장 
       
     def show_exit(self):
         sys.exit(app.exec_())
@@ -209,6 +261,8 @@ if __name__ == "__main__":
     
     # 위젯 추가
     widget.addWidget(se)
+    widget.setWindowFlag(QtCore.Qt.FramelessWindowHint)
+    widget.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
     # 프로그램 화면
     widget.setFixedHeight(900)
@@ -217,40 +271,9 @@ if __name__ == "__main__":
     widget.setWindowTitle('PDR')
     widget.setWindowIcon(QtGui.QIcon('img/icon.png'))
     
-    # 모델 import
-#     import torch
-#     import tensorflow.keras as tf
     
     chexnet_path = './weight/chexnet_model_tmdhey.h5'
     chexnet_model = tf.models.load_model(chexnet_path, compile=False)
-
-#     # ------make model --------
-#     backbone = DenseNet121(input_shape=(224, 224, 3),
-#                           weights= None,
-#                           include_top=False)
-#     x = backbone.output # fc layer 
-#     x = GlobalAveragePooling2D()(x)
-#     output = Dense(units=7, activation='softmax', name='output_layer')(x)
-
-#     chexnet_model = Model(inputs=backbone.input, outputs=output)
-#     # weight 적용
-#     chexnet_model.load_weights('./weight/retest_chexnet.hdf5')
-    # compile
-#     chexnet_model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy', deff.precision, deff.recall, deff.f1_score])
-
     
     sys.exit(app.exec_())
-
-#                 # global openpath
-#                 openimg = bone.read_img(openpath)
-#                 self.progressBar2.setValue(np.random.randint(10,20))
-#                 mask = bone.make_mask(openimg)
-#                 masked = bone.cut_mask(openimg, mask)
-#                 self.progressBar2.setValue(np.random.randint(25,40))
-#                 rotated_img = bone.img_rotation(masked)
-#                 self.progressBar2.setValue(np.random.randint(50,60))
-#                 bone_img = bone.Decomposing(rotated_img,60,55,50,25)
-#                 self.progressBar2.setValue(np.random.randint(70,80))
-#                 cv2.imwrite(save_path, bone_img)
-#                 여기에 randint대신 숫자카운트 넣기...
 
